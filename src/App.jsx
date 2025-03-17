@@ -49,6 +49,7 @@ function App() {
   return (
 <div className="app">
   <div className="header">
+    <h1>Dictionary App</h1>
     <h1>By Jackiline Nderi</h1>
     <p>Type a word to find its meaning</p>
   </div>
