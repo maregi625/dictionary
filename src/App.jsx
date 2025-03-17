@@ -7,8 +7,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleInputChange = (event) => {
-    setWord(event.target.value);
+  const handleInputChange = ({ target: { value } }) => {
+    setWord(value);
   };
 
   const fetchData = async () => {
@@ -22,7 +22,7 @@ function App() {
     setData(null);
     try {
       const response = await fetch(
-        "https://api.dictionaryapi.dev/api/v2/entries/en/${word}"
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
       if (!response.ok) {
         if (response.status === 404) {
@@ -47,46 +47,45 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <div className="header">
-        <h1>By Jackiline Nderi</h1>
-        <p>Type a word to find its meaning</p>
-      </div>
+<div className="app">
+  <div className="header">
+    <h1>By Jackiline Nderi</h1>
+    <p>Type a word to find its meaning</p>
+  </div>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Type a word to search"
-          value={word}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          aria-label="Enter a word to search"
-        />
-        <button onClick={fetchData} disabled={loading} aria-busy={loading}>
-          {loading ? "Searching..." : "Search"}
-        </button>
-      </div>
+  <div className="search-container">
+    <input
+      type="text"
+      placeholder="Type a word to search"
+      value={word}
+      onChange={handleInputChange}
+      onKeyDown={handleKeyDown}
+      aria-label="Enter a word to search"
+    />
+    <button onClick={fetchData} disabled={loading}>
+      {loading ? "Searching..." : "Search"}
+    </button>
+  </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">Error: {error}</p>}
+  {loading && <p>Loading...</p>}
+  {error && <p className="error">Error: {error}</p>}
 
-      {data &&
-        data.map((entry, index) => (
-          <div key={index} className="result">
-            <h2>{entry.word}</h2>
-            {entry.meanings.map((meaning, mIndex) => (
-              <div key={mIndex} className="meaning">
-                <h3>{meaning.partOfSpeech}</h3>
-                {meaning.definitions.map((definition, dIndex) => (
-                  <div key={dIndex} className="definition">
-                    <p>{definition.definition}</p>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        ))}
+  {data?.map((entry, index) => (
+    <div key={index} className="result">
+      <h2>{entry.word}</h2>
+      {entry.meanings.map((meaning, mIndex) => (
+        <div key={mIndex} className="meaning">
+          <h3>{meaning.partOfSpeech}</h3>
+          {meaning.definitions.map((definition, dIndex) => (
+            <p key={dIndex} className="definition">
+              {definition.definition}
+            </p>
+          ))}
+        </div>
+      ))}
     </div>
+  ))}
+</div>
   );
 }
 
